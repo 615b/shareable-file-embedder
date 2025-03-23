@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fileStorage } from '@/lib/fileStorage';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 
@@ -13,6 +13,8 @@ const FileViewer = () => {
     name: string;
     type: string;
     data: string;
+    author?: string;
+    authorIcon?: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +35,31 @@ const FileViewer = () => {
       name: storedFile.name,
       type: storedFile.type,
       data: storedFile.data,
+      author: storedFile.author,
+      authorIcon: storedFile.authorIcon,
     });
+
+    // Update page metadata for Discord embed
+    if (storedFile.author) {
+      document.title = `${storedFile.name} by ${storedFile.author} - FileEmbed`;
+      
+      // Update meta tags for embeds
+      const metaTags = [
+        { property: 'og:title', content: `${storedFile.name} by ${storedFile.author}` },
+        { name: 'twitter:title', content: `${storedFile.name} by ${storedFile.author}` },
+      ];
+      
+      metaTags.forEach(({ property, name, content }) => {
+        const selector = property 
+          ? `meta[property="${property}"]` 
+          : `meta[name="${name}"]`;
+        const element = document.querySelector(selector);
+        
+        if (element) {
+          element.setAttribute('content', content);
+        }
+      });
+    }
   }, [fileId]);
 
   const handleDownload = () => {
@@ -77,8 +103,36 @@ const FileViewer = () => {
 
   return (
     <div className="container max-w-4xl mx-auto py-12 px-4">
+      <Button 
+        variant="outline" 
+        size="sm" 
+        className="mb-8" 
+        onClick={() => window.location.href = '/'}
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Back to upload
+      </Button>
+      
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold truncate">{file.name}</h1>
+        <div>
+          <h1 className="text-2xl font-bold truncate">{file.name}</h1>
+          {file.author && (
+            <div className="flex items-center mt-1 text-gray-600">
+              {file.authorIcon && (
+                <img 
+                  src={file.authorIcon} 
+                  alt={file.author} 
+                  className="w-5 h-5 rounded-full mr-2"
+                  onError={(e) => {
+                    // Handle broken image
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              )}
+              <span>Uploaded by {file.author}</span>
+            </div>
+          )}
+        </div>
         <Button onClick={handleDownload}>Download</Button>
       </div>
 

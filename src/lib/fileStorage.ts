@@ -9,6 +9,8 @@ type StoredFile = {
   size: number;
   data: string; // base64 encoded file data
   createdAt: Date;
+  author?: string; // Optional author name
+  authorIcon?: string; // Optional author icon URL
 };
 
 class FileStorage {
@@ -21,7 +23,7 @@ class FileStorage {
   }
 
   // Store a file and return its ID
-  async storeFile(file: File): Promise<string> {
+  async storeFile(file: File, metadata: { author?: string; authorIcon?: string } = {}): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -39,6 +41,8 @@ class FileStorage {
           size: file.size,
           data: event.target.result,
           createdAt: new Date(),
+          author: metadata.author,
+          authorIcon: metadata.authorIcon,
         });
         
         resolve(id);

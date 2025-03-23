@@ -25,10 +25,22 @@ const Index = () => {
             <h3 className="text-xl font-semibold mb-4">How It Works</h3>
             <ol className="list-decimal pl-6 space-y-2">
               <li>Upload your file by dragging & dropping or clicking to browse</li>
+              <li>Optionally add your author name and icon URL for enhanced Discord embeds</li>
               <li>Copy the generated link</li>
               <li>Share the link on Discord or other platforms</li>
               <li>When shared on Discord, the link will display as an embed with a preview (for supported file types)</li>
             </ol>
+          </div>
+          
+          <div className="mt-8 bg-white p-6 rounded-lg border">
+            <h3 className="text-xl font-semibold mb-4">Author Information</h3>
+            <p className="text-gray-600 mb-4">
+              You can now customize your Discord embeds with author information:
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Author Name:</strong> Add your name or username to be displayed in the embed</li>
+              <li><strong>Author Icon:</strong> Provide a URL to a square image to display as your avatar in the embed</li>
+            </ul>
           </div>
         </div>
       </main>
