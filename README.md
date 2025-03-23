@@ -11,6 +11,7 @@ A simple file sharing app that generates links which create embeds when shared o
 - File viewing interface
 - Discord-friendly OpenGraph metadata for embeds
 - Responsive design
+- Custom author name and icon for Discord embeds
 
 ## Running Locally
 
@@ -26,34 +27,46 @@ npm install
 npm run dev
 ```
 
-## Deployment
+## Deployment to GitHub Pages
 
-This application can be deployed to any static hosting service like Vercel, Netlify, or GitHub Pages.
+### Automated Deployment (Recommended)
 
-### Deploying to GitHub Pages
-
-1. Create a GitHub repository for this project
+1. Create a GitHub repository for this project if you haven't already
 2. Push your code to the repository
-3. In your repository settings, go to the "Pages" section
-4. Choose the branch you want to deploy (usually `main`)
-5. Set the folder to `/` or `/dist` (if you build before deployment)
-6. Click "Save"
+3. In your repository settings, navigate to Pages
+4. Under "Build and deployment":
+   - Source: GitHub Actions
+   - Choose the "Static HTML" workflow template
+   - Commit the workflow file to your repository
 
-### Deploying to Netlify or Vercel
+GitHub Actions will build and deploy your site automatically.
 
-Both Netlify and Vercel offer simple deployment from GitHub repositories:
+### Manual Deployment
 
-1. Connect your GitHub account
-2. Select the repository
-3. Configure the build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-4. Deploy
+1. Update the `base` in vite.config.ts to match your repository name: `base: '/your-repo-name/'`
+2. Build your project:
+   ```sh
+   npm run build
+   ```
+3. Deploy the `dist` directory to GitHub Pages:
+   ```sh
+   npx gh-pages -d dist
+   ```
+
+### Troubleshooting
+
+If you encounter a white screen when deploying to GitHub Pages:
+
+1. Ensure the `base` path in vite.config.ts is set correctly
+2. Check that the app is using HashRouter (as implemented in App.tsx)
+3. Verify all assets use relative paths
+4. Check the browser console for any errors
+5. Ensure the build process completed successfully
 
 ## Important Notes
 
 - This demo uses in-memory storage, which means:
-  - Files are not persisted between server restarts
+  - Files are not persisted between browser sessions
   - Files are stored in the browser memory, limiting the size and number of files
   - Not suitable for production use as-is
 
